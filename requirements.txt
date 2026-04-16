@@ -2,4 +2,5 @@ flasgger==0.9.7.1
 Flask==3.1.2
 Flask-SQLAlchemy==3.1.1
 python-dotenv==1.2.2
-
+psycopg2-binary
+gunicorn
