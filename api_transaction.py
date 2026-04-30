@@ -123,6 +123,7 @@ def obtenir_utilisateur(user_id):
         required: true
     responses:
       200: {description: "Utilisateur trouvé"}
+      404: {description: "Utilisateur non trouve"}
     """
     user = Utilisateur.query.get_or_404(user_id)
     return jsonify(user.convertir_json())
@@ -148,6 +149,8 @@ def modifier_utilisateur(user_id):
             email: {type: string, example: "nouveau@email.com"}
     responses:
       200: {description: "Utilisateur modifié"}
+      404: {description: "Cet Utilisateur n'existe pas "}
+
     """
     user = Utilisateur.query.get_or_404(user_id)
     data = request.get_json()
@@ -169,6 +172,8 @@ def supprimer_utilisateur(user_id):
         required: true
     responses:
       200: {description: "Utilisateur supprimé"}
+      404: {description: "Cet Utilisateur n'existe pas "}
+
     """
     user = Utilisateur.query.get_or_404(user_id)
     db.session.delete(user)
@@ -199,6 +204,7 @@ def creer_compte(user_id):
             solde_initial: {type: number, example: 5000}
     responses:
       201: {description: "Compte créé"}
+      404: {description: "Creation de Compte impossible car Cet Utilisateur n'existe pas "}
     """
     user = Utilisateur.query.get_or_404(user_id)
     data = request.get_json() or {}
@@ -238,6 +244,7 @@ def effectuer_depot(compte_id):
             montant: {type: number, example: 1000}
     responses:
       200: {description: "Dépôt réussi"}
+      404: {description: "Montant invalide, entrez-en un valide"}
     """
     compte = Compte.query.get_or_404(compte_id)
     data = request.get_json()
@@ -272,7 +279,7 @@ def effectuer_retrait(compte_id):
             montant: {type: number, example: 500}
     responses:
       200: {description: "Retrait réussi"}
-      400: {description: "Solde insuffisant"}
+      400: {description: "Solde insuffisant, donc Retrait impossible veuillez recharger votre compte"}
     """
     compte = Compte.query.get_or_404(compte_id)
     data = request.get_json()
@@ -301,6 +308,7 @@ def historique_transactions(compte_id):
         required: true
     responses:
       200: {description: "Liste des transactions"}
+      404: {description: "Aucune transaction "}
     """
     compte = Compte.query.get_or_404(compte_id)
     return jsonify([t.convertir_json() for t in compte.transactions])
